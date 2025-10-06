@@ -100,7 +100,7 @@ void DrawGame(const GameState *game)
 
 bool ShouldGameExit(void)
 {
-    if (WindowShouldClose())
+    if (WindowShouldClose() || WITH_KEY_QUIT(IsKeyDown))
         return true;
 
     bool useGamepad = IsGamepadAvailable(0);
@@ -146,70 +146,70 @@ void HandleInput(GameState *game)
     }
 
     // Handle D-pad input for rotation (Left/Right)
-    if (currentLeft && !game->leftPressed)
+    if (currentLeft && game->leftPressed < GetTime() - DOUBLE_PRESS_DELAY)
     {
         game->rotation -= ROTATION_STEP; // Rotate counter-clockwise
-        game->leftPressed = true;
+        game->leftPressed = GetTime();
     }
     else if (!currentLeft)
     {
-        game->leftPressed = false;
+        game->leftPressed = 0.0f;
     }
 
-    if (currentRight && !game->rightPressed)
+    if (currentRight && game->rightPressed < GetTime() - DOUBLE_PRESS_DELAY)
     {
         game->rotation += ROTATION_STEP; // Rotate clockwise
-        game->rightPressed = true;
+        game->rightPressed = GetTime();
     }
     else if (!currentRight)
     {
-        game->rightPressed = false;
+        game->rightPressed = 0.0f;
     }
 
     // Handle D-pad input for color change (Up/Down)
-    if (currentUp && !game->upPressed)
+    if (currentUp && game->upPressed < GetTime() - DOUBLE_PRESS_DELAY)
     {
         game->currentColorIndex = (game->currentColorIndex + 1) % COLOR_COUNT;
-        game->upPressed = true;
+        game->upPressed = GetTime();
     }
     else if (!currentUp)
     {
-        game->upPressed = false;
+        game->upPressed = 0.0f;
     }
 
-    if (currentDown && !game->downPressed)
+    if (currentDown && game->downPressed < GetTime() - DOUBLE_PRESS_DELAY)
     {
         game->currentColorIndex = (game->currentColorIndex - 1 + COLOR_COUNT) % COLOR_COUNT;
-        game->downPressed = true;
+        game->downPressed = GetTime();
     }
     else if (!currentDown)
     {
-        game->downPressed = false;
+        game->downPressed = 0.0f;
     }
 
     // Handle A button for scaling up
-    if (currentA && !game->aPressed)
+    if (currentA && game->aPressed < GetTime() - DOUBLE_PRESS_DELAY)
     {
         game->squareSize += SIZE_STEP;
         if (game->squareSize > MAX_SIZE)
             game->squareSize = MAX_SIZE;
-        game->aPressed = true;
+        game->aPressed = GetTime();
     }
     else if (!currentA)
     {
-        game->aPressed = false;
+        game->aPressed = 0.0f;
     }
 
     // Handle B button for scaling down
-    if (currentB && !game->bPressed)
+    if (currentB && game->bPressed < GetTime() - DOUBLE_PRESS_DELAY)
     {
         game->squareSize -= SIZE_STEP;
         if (game->squareSize < MIN_SIZE)
             game->squareSize = MIN_SIZE;
-        game->bPressed = true;
+        game->bPressed = GetTime();
     }
     else if (!currentB)
     {
-        game->bPressed = false;
+        game->bPressed = 0.0f;
     }
 }

@@ -6,15 +6,8 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Define source and header files
-set(SOURCES
-    src/main.c
-    src/game.c
-)
-
-set(HEADERS
-    include/config.h
-    include/game.h
-)
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.c" "src/*.cpp" "src/*.cxx")
+file(GLOB_RECURSE HEADERS RELATIVE ${CMAKE_SOURCE_DIR} "include/*.h" "include/*.hpp" "include/*.hxx")
 
 # Options for build configuration
 option(BUILD_FOR_RG35XX "Build for RG35XX Plus" OFF)

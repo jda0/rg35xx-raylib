@@ -16,7 +16,19 @@ host:
 		-DCMAKE_BUILD_TYPE=Release \
 		-G "Unix Makefiles"
 	cd build/host && make -j$(nproc)
-	cp -r build/host/$(CMAKEPROJECT) out/host
+	rm -rf out/host/* || true
+	mkdir -p out/host || true
+	cp build/host/$(CMAKEPROJECT) out/host/$(OUTPROJECT)
+	$(MAKE) host-run
+
+ifneq (, $(filter $(RUN), true 1))
+host-run:
+	chmod +x out/host/$(OUTPROJECT)
+	./out/host/$(OUTPROJECT)
+else
+host-run:
+	@echo "Skipping host run. Set RUN=true to enable."
+endif
 	
 rg35xx:
 	@echo "Building for RG35XX..."

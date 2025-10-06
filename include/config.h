@@ -13,6 +13,8 @@
 #define MIN_SIZE 10.0f
 #define MAX_SIZE 200.0f
 
+#define DOUBLE_PRESS_DELAY 0.2f // Seconds
+
 // Color array for cycling through different colors
 extern Color colors[];
 extern const int COLOR_COUNT;
