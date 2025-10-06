@@ -14,6 +14,4 @@ jobs:
       - name: Create Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            dist/host
-            dist/rg35xx
+          files: dist
