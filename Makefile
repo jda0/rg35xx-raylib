@@ -4,27 +4,30 @@
 
 CMAKEPROJECT := RG35XX_Game
 OUTPROJECT := RaylibTest
+HOSTTYPE := $(shell echo $${OSTYPE:-host})
 
 all: help
 
 host:
-	@echo "Building for host (macOS/Linux)..."
-	mkdir -p build/host
+	@echo "Building for host ($(HOSTTYPE))..."
+	mkdir -p build/$(HOSTTYPE)
 	cmake \
 		-S . \
-		-B build/host \
+		-B build/$(HOSTTYPE) \
 		-DCMAKE_BUILD_TYPE=Release \
 		-G "Unix Makefiles"
-	cd build/host && make -j$(nproc)
-	rm -rf out/host/* || true
-	mkdir -p out/host || true
-	cp build/host/$(CMAKEPROJECT) out/host/$(OUTPROJECT)
+	cd build/$(HOSTTYPE) && make -j$(nproc)
+	rm -rf dist/$(HOSTTYPE)/* || true
+	mkdir -p dist/$(HOSTTYPE) || true
+	cp -r build/$(HOSTTYPE)/assets/ dist/$(HOSTTYPE)/assets
+	rm -f dist/$(HOSTTYPE)/assets/README.md || true
+	cp build/$(HOSTTYPE)/$(CMAKEPROJECT) dist/$(HOSTTYPE)/$(OUTPROJECT)
 	$(MAKE) host-run
 
 ifneq (, $(filter $(RUN), true 1))
 host-run:
-	chmod +x out/host/$(OUTPROJECT)
-	./out/host/$(OUTPROJECT)
+	chmod +x dist/host/$(OUTPROJECT)
+	./dist/host/$(OUTPROJECT)
 else
 host-run:
 	@echo "Skipping host run. Set RUN=true to enable."
@@ -37,25 +40,22 @@ rg35xx:
 	docker run -v .:/workspace:rw \
 		rg35xx-builder \
 		/bin/sh -c 'cmake \
-			-S . \
-			-B build/rg35xx \
-			-DCMAKE_BUILD_TYPE=Release \
-			-DCMAKE_TOOLCHAIN_FILE=rg35xx-toolchain.cmake \
-			-DBUILD_FOR_RG35XX=ON \
-			-G "Unix Makefiles" && \
+				-S . \
+				-B build/rg35xx \
+				-DCMAKE_BUILD_TYPE=Release \
+				-DCMAKE_TOOLCHAIN_FILE=rg35xx-toolchain.cmake \
+				-DBUILD_FOR_RG35XX=ON \
+				-G "Unix Makefiles" && \
 			cd build/rg35xx && \
 			make clean && \
-			make -j$$(nproc) && \
-			(rm -r /workspace/out/rg35xx || true) && \
-			mkdir -p /workspace/out/rg35xx/.$(OUTPROJECT) && \
-			cp -r /workspace/build/rg35xx/rg35xx/* \
-			  /workspace/out/rg35xx/.$(OUTPROJECT) && \
-			mv /workspace/out/rg35xx/.$(OUTPROJECT)/assets/entrypoint.sh \
-				/workspace/out/rg35xx/$(OUTPROJECT).sh && \
-			mv /workspace/out/rg35xx/.$(OUTPROJECT)/$(CMAKEPROJECT) \
-				/workspace/out/rg35xx/.$(OUTPROJECT)/$(OUTPROJECT) && \
-			mv /workspace/out/rg35xx/.$(OUTPROJECT)/assets/keymap.gptk \
-				/workspace/out/rg35xx/.$(OUTPROJECT)/$(OUTPROJECT).gptk'
+			make -j$$(nproc)'
+	(rm -r dist/rg35xx || true)
+	mkdir -p dist/rg35xx/.$(OUTPROJECT)
+	cp -r build/rg35xx/rg35xx/* dist/rg35xx/.$(OUTPROJECT)
+	mv dist/rg35xx/.$(OUTPROJECT)/$(CMAKEPROJECT) dist/rg35xx/.$(OUTPROJECT)/$(OUTPROJECT)
+	cp assets-rg35xx/entrypoint.sh dist/rg35xx/$(OUTPROJECT).sh
+	cp assets-rg35xx/keymap.gptk dist/rg35xx/.$(OUTPROJECT)/$(OUTPROJECT).gptk
+	(rm dist/rg35xx/.$(OUTPROJECT)/assets/README.md || true)
 
 help:
 	@echo "Usage: make [target]"

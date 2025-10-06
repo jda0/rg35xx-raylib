@@ -113,7 +113,7 @@ set(TOOLCHAIN_PATH "C:/your/path/to/aarch64-none-linux-gnu/bin")
 make host
 ```
 
-The executable will be in `out/host`
+The executable will be in `dist/host`
 
 ### For Windows Development
 
@@ -147,7 +147,7 @@ The executable will be in `build-windows/Release/RG35XX_Game.exe`
 make rg35xx
 ```
 
-The executable will be in `out/rg35xx`
+The executable will be in `dist/rg35xx`
 
 #### Using Build Script (Windows)
 ```batch
@@ -246,6 +246,8 @@ Note: NEON SIMD is automatically included in ARMv8-A architecture.
 
 ### Adding Assets
 Place assets in the `assets/` directory, and CMake will automatically copy them to the build output.
+CMake will not automatically prune assets - if you delete an asset you will need to also delete it
+in the build output (delete `build/{arch}/assets`).
 
 ## Notes
 
