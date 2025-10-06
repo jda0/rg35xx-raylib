@@ -12,15 +12,26 @@ A cross-platform raylib 5.5 game project that can be compiled for both Windows (
 
 ## Prerequisites
 
+### For macOS Development
+- CMake 4.1.2 or newer (may work with older versions but untested)
+- Clang 17.0.0 or newer (via XCode, may work with older versions but untested)
+- GNU Make 3.8.1 or newer (via XCode, may work with older versions but untested)
+
+### For RG35XX Cross-Compilation on macOS
+- **Docker** (via Docker Desktop, Orbstack, etc) if cross-compiling
+- RG35XX system libraries and headers (see setup instructions below)
+  - These are included in this repo
+
 ### For Windows Development
 - **Visual Studio 2022** with C++ development tools
 - CMake 3.15 or newer
 
-### For RG35XX Cross-Compilation
+### For RG35XX Cross-Compilation on Windows
 - **Arm GNU Toolchain aarch64-none-linux-gnu**
   - Download from: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
   - Choose: `arm-gnu-toolchain-14.3.rel1-mingw-w64-x86_64-aarch64-none-linux-gnu.exe`
 - RG35XX system libraries and headers (see setup instructions below)
+  - These are included in this repo.
 
 ## Project Structure
 
@@ -46,7 +57,7 @@ RG35XX/
 
 ## Setup Instructions
 
-### 1. Extract Libraries from RG35XX Device
+### 1. Extract Libraries from RG35XX Device (skippable)
 
 Connect to your RG35XX device via SSH and copy the required ARM compiled libraries. From your project folder, navigate to `rg35xx-sysroot/usr/lib` and run:
 
@@ -63,7 +74,7 @@ scp root@192.168.8.157:/usr/lib/libGLES* .
 
 **Note**: Replace `192.168.8.157` with your RG35XX device's actual IP address.
 
-### 2. Setup Header Files
+### 2. Setup Header Files (skippable)
 
 Copy the required header files to `rg35xx-sysroot/usr/include/`:
 
@@ -81,12 +92,12 @@ Download and copy the following header directories:
 
 Place these in `rg35xx-sysroot/usr/include/`
 
-### 3. Install AArch64 Toolchain
+### 3. Install AArch64 Toolchain (skippable on macOS)
 
 1. Download the **Arm GNU Toolchain aarch64-none-linux-gnu** for Windows
 2. Install **arm-gnu-toolchain-14.3.rel1-mingw-w64-x86_64-aarch64-none-linux-gnu.exe**
 
-### 4. Update Toolchain Paths
+### 4. Update Toolchain Paths (skippable on macOS)
 
 Edit `rg35xx-toolchain.cmake` if your toolchain is in a different location:
 
@@ -95,6 +106,14 @@ set(TOOLCHAIN_PATH "C:/your/path/to/aarch64-none-linux-gnu/bin")
 ```
 
 ## Building
+
+### For macOS Development
+
+```sh
+make host
+```
+
+The executable will be in `out/host`
 
 ### For Windows Development
 
@@ -123,12 +142,21 @@ The executable will be in `build-windows/Release/RG35XX_Game.exe`
 
 ### For RG35XX Target
 
-#### Using Build Script
+#### Using Docker (macOS)
+```sh
+make rg35xx
+```
+
+The executable will be in `out/rg35xx`
+
+#### Using Build Script (Windows)
 ```batch
 build-rg35xx.bat
 ```
 
-#### Manual Build
+The executable will be in `build-rg35xx/rg35xx/RG35XX_Game`
+
+#### Manual Build (Windows)
 ```batch
 mkdir build-rg35xx
 cd build-rg35xx
@@ -187,12 +215,12 @@ scp RG35XX_Game root@192.168.8.157:/mnt/mmc/ports
 
 ## Troubleshooting
 
-### Cross-compilation fails
+### Cross-compilation fails (Windows)
 - Verify **Arm GNU Toolchain aarch64-none-linux-gnu** is installed and in PATH
 - Check that the compiler name matches: `aarch64-none-linux-gnu-gcc`
 - Update compiler paths in `rg35xx-toolchain.cmake`
 
-### Visual Studio can't find raylib
+### Visual Studio can't find raylib (Windows)
 - CMake will automatically download raylib 5.5
 - If download fails, check internet connection and Git installation
 

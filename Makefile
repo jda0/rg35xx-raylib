@@ -16,6 +16,7 @@ host:
 		-DCMAKE_BUILD_TYPE=Release \
 		-G "Unix Makefiles"
 	cd build/host && make -j$(nproc)
+	cp -r build/host/$(CMAKEPROJECT) out/host
 	
 rg35xx:
 	@echo "Building for RG35XX..."
