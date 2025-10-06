@@ -4,19 +4,11 @@
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR aarch64)
 
-# Specify the cross-compiler
-# You need to download AArch64 GNU Toolchain for Windows
-# Download from: https://developer.arm.com/downloads/-/gnu-a
-# Choose: arm-gnu-toolchain-XX.X-mingw-w64-i686-aarch64-none-linux-gnu.tar.xz
-# Or if you're using Linaro toolchain: https://releases.linaro.org/components/toolchain/binaries/
-
-# Set the path to your AArch64 toolchain (adjust this path to match your installation)
-set(TOOLCHAIN_PATH "C:/Program Files (x86)/Arm GNU Toolchain aarch64-none-linux-gnu/14.3 rel1/bin")
-
-set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}/aarch64-none-linux-gnu-gcc.exe)
-set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}/aarch64-none-linux-gnu-g++.exe)
-set(CMAKE_AR ${TOOLCHAIN_PATH}/aarch64-none-linux-gnu-ar.exe)
-set(CMAKE_RANLIB ${TOOLCHAIN_PATH}/aarch64-none-linux-gnu-ranlib.exe)
+set(TOOLCHAIN_ID "aarch64-linux-gnu")
+set(CMAKE_C_COMPILER ${TOOLCHAIN_ID}-gcc)
+set(CMAKE_CXX_COMPILER ${TOOLCHAIN_ID}-g++)
+set(CMAKE_AR ${TOOLCHAIN_ID}-ar)
+set(CMAKE_RANLIB ${TOOLCHAIN_ID}-ranlib)
 
 # Target specific flags for Cortex-A53 (ARM64)
 set(CMAKE_C_FLAGS "-march=armv8-a -mtune=cortex-a53 -O2 -ffunction-sections -fdata-sections")

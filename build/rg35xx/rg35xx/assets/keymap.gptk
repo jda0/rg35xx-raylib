@@ -1,0 +1,21 @@
+[controls]
+
+guide = esc
+
+back = -
+start = =
+
+up = w
+down = s
+left = a
+right = d
+
+a = "'"
+b = /
+x = [
+y = ]
+
+l1 = tab
+l2 = q
+r1 = e
+r2 = r

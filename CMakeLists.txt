@@ -56,9 +56,9 @@ if(BUILD_FOR_RG35XX)
     set(GRAPHICS "GRAPHICS_API_OPENGL_ES3" CACHE STRING "Use OpenGL ES 3.0" FORCE)
 
 else()
-    message(STATUS "Configuring for Windows development")
+    message(STATUS "Configuring for Host development")
     
-    # Windows build uses default GLFW and OpenGL
+    # Windows/macOS build uses default GLFW and OpenGL
     set(PLATFORM "Desktop" CACHE STRING "Desktop platform" FORCE)
     set(OPENGL_VERSION "3.3" CACHE STRING "OpenGL version" FORCE)
     set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
